@@ -1,30 +1,55 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/with_header.html.twig' %}
 
 {% block title %}ChecklistTemplate{% endblock %}
 
-{% block body %}
-    <h1>ChecklistTemplate</h1>
+{% block content %}
+    <div class="container mx-auto py-8 px-4">
+        <h1 class="text-4xl font-bold mb-8">{{ checklist_template.title }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ checklist_template.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ checklist_template.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ checklist_template.description }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <div class="card bg-base-200 shadow">
+            <div class="card-body">
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <tbody>
+                            <tr class="hover">
+                                <th class="text-lg w-1/4">ID</th>
+                                <td class="text-lg">{{ checklist_template.id }}</td>
+                            </tr>
+                            <tr class="hover">
+                                <th class="text-lg w-1/4">Title</th>
+                                <td class="text-lg">{{ checklist_template.title }}</td>
+                            </tr>
+                            <tr class="hover">
+                                <th class="text-lg w-1/4">Description</th>
+                                <td class="text-lg">{{ checklist_template.description }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-    <a href="{{ path('app_checklist_template_index') }}">back to list</a>
+                <div class="card-actions justify-end mt-8 space-x-4">
+                    <a href="{{ path('app_checklist_template_edit', {'id': checklist_template.id}) }}" 
+                       class="btn btn-primary">
+                        Edit
+                    </a>
 
-    <a href="{{ path('app_checklist_template_edit', {'id': checklist_template.id}) }}">edit</a>
+                    <a href="{{ path('app_checklist_item_template_index', {'template_id': checklist_template.id}) }}" 
+                       class="btn btn-secondary">
+                        Manage Items
+                    </a>
 
-    {{ include('checklist_template/_delete_form.html.twig') }}
+                    <div class="ml-4">
+                        {{ include('checklist_template/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{{ path('app_checklist_template_index') }}" 
+               class="btn btn-outline">
+                Back to list
+            </a>
+        </div>
+    </div>
 {% endblock %}

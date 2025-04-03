@@ -1,9 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/with_header.html.twig' %}
 
-{% block title %}ChecklistItemTemplate index{% endblock %}
+{% block title %}Items for {{ checklist_template.title }}{% endblock %}
 
-{% block body %}
-    <h1>ChecklistItemTemplate index</h1>
+{% block content %}
+    <h1>Items for {{ checklist_template.title }}</h1>
 
     <table class="table">
         <thead>
@@ -23,8 +23,8 @@
                 <td>{{ checklist_item_template.isRequired ? 'Yes' : 'No' }}</td>
                 <td>{{ checklist_item_template.position }}</td>
                 <td>
-                    <a href="{{ path('app_checklist_item_template_show', {'id': checklist_item_template.id}) }}">show</a>
-                    <a href="{{ path('app_checklist_item_template_edit', {'id': checklist_item_template.id}) }}">edit</a>
+                    <a href="{{ Checklist App('app_checklist_item_template_show', {'template_id': checklist_template.id, 'id': checklist_item_template.id}) }}">show</a>
+                    <a href="{{ Checklist App('app_checklist_item_template_edit', {'template_id': checklist_template.id, 'id': checklist_item_template.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -35,5 +35,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_checklist_item_template_new') }}">Create new</a>
+    <a href="{{ Checklist App('app_checklist_item_template_new', {'template_id': checklist_template.id}) }}">Create new</a>
+    <a href="{{ Checklist App('app_checklist_template_index') }}">Back to templates</a>
 {% endblock %}

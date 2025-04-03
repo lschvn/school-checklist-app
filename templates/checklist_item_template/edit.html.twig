@@ -1,13 +1,13 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/with_header.html.twig' %}
 
 {% block title %}Edit ChecklistItemTemplate{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>Edit ChecklistItemTemplate</h1>
 
     {{ include('checklist_item_template/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_checklist_item_template_index') }}">back to list</a>
+    Checklist App
 
     {{ include('checklist_item_template/_delete_form.html.twig') }}
 {% endblock %}
