@@ -1,55 +1,193 @@
 {% extends 'layouts/with_header.html.twig' %}
 
-{% block title %}ChecklistTemplate{% endblock %}
+{% block title %}{{ checklist_template.title }}{% endblock %}
 
 {% block content %}
-    <div class="container mx-auto py-8 px-4">
-        <h1 class="text-4xl font-bold mb-8">{{ checklist_template.title }}</h1>
-
-        <div class="card bg-base-200 shadow">
+<div class="container mx-auto py-8 px-4">
+    <!-- En-tête avec navigation et actions -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div class="breadcrumbs text-sm mb-4 md:mb-0">
+            <ul>
+                <li><a href="{{ path('app_checklist_template_index') }}">Templates</a></li>
+                <li class="font-medium">{{ checklist_template.title }}</li>
+            </ul>
+        </div>
+        
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ path('app_checklist_template_edit', {'id': checklist_template.id}) }}" 
+               class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-pen-to-square mr-2"></i> Modifier
+            </a>
+            
+            <a href="{{ path('app_checklist_item_template_index', {'template_id': checklist_template.id}) }}" 
+               class="btn btn-secondary btn-sm">
+                <i class="fa-solid fa-list-check mr-2"></i> Gérer les éléments
+            </a>
+            
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-outline btn-sm">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </label>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52">
+                    <li>{{ include('checklist_template/_delete_form.html.twig') }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Informations du template -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div class="card bg-base-100 shadow-lg col-span-1">
             <div class="card-body">
-                <div class="overflow-x-auto">
-                    <table class="table w-full">
-                        <tbody>
-                            <tr class="hover">
-                                <th class="text-lg w-1/4">ID</th>
-                                <td class="text-lg">{{ checklist_template.id }}</td>
-                            </tr>
-                            <tr class="hover">
-                                <th class="text-lg w-1/4">Title</th>
-                                <td class="text-lg">{{ checklist_template.title }}</td>
-                            </tr>
-                            <tr class="hover">
-                                <th class="text-lg w-1/4">Description</th>
-                                <td class="text-lg">{{ checklist_template.description }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="card-actions justify-end mt-8 space-x-4">
-                    <a href="{{ path('app_checklist_template_edit', {'id': checklist_template.id}) }}" 
-                       class="btn btn-primary">
-                        Edit
-                    </a>
-
-                    <a href="{{ path('app_checklist_item_template_index', {'template_id': checklist_template.id}) }}" 
-                       class="btn btn-secondary">
-                        Manage Items
-                    </a>
-
-                    <div class="ml-4">
-                        {{ include('checklist_template/_delete_form.html.twig') }}
+                <h2 class="card-title flex items-center">
+                    <i class="fa-solid fa-id-card text-primary mr-2"></i>
+                    Informations
+                </h2>
+                <div class="mt-4 space-y-4">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-primary bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-hashtag text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-70">Identifiant</p>
+                            <p class="font-semibold">{{ checklist_template.id }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-secondary bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-heading text-secondary"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-70">Titre</p>
+                            <p class="font-semibold">{{ checklist_template.title }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="w-10 h-10 rounded-full bg-accent bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-align-left text-accent"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm opacity-70">Description</p>
+                            <p class="font-semibold">
+                                {% if checklist_template.description %}
+                                    {{ checklist_template.description }}
+                                {% else %}
+                                    <span class="opacity-50 italic">Aucune description</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-info bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-list-ol text-info"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-70">Nombre d'éléments</p>
+                            <p class="font-semibold">
+                                {% if checklist_item_templates|length > 0 %}
+                                    {{ checklist_item_templates|length }}
+                                {% else %}
+                                    Aucun
+                                {% endif %}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="mt-4">
-            <a href="{{ path('app_checklist_template_index') }}" 
-               class="btn btn-outline">
-                Back to list
-            </a>
+        <!-- Éléments de la checklist -->
+        <div class="card bg-base-100 shadow-lg col-span-1 lg:col-span-2">
+            <div class="card-body">
+                <h2 class="card-title flex items-center">
+                    <i class="fa-solid fa-list-check text-primary mr-2"></i>
+                    Éléments de la checklist
+                </h2>
+                
+                {% if checklist_item_templates is defined and checklist_item_templates is not null and checklist_item_templates|length > 0 %}
+                    <div class="overflow-x-auto mt-4">
+                        <table class="table w-full">
+                            <thead>
+                                <tr>
+                                    <th class="w-16 text-center">#</th>
+                                    <th>Élément</th>
+                                    <th class="w-32 text-center">Obligatoire</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in checklist_item_templates %}
+                                    <tr class="hover">
+                                        <td class="text-center">{{ item.position }}</td>
+                                        <td>
+                                            <div class="font-medium">{{ item.label }}</div>
+                                        </td>
+                                        <td class="text-center">
+                                            {% if item.isRequired %}
+                                                <div class="badge badge-accent">Oui</div>
+                                            {% else %}
+                                                <div class="badge badge-outline">Non</div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mt-4">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>Aucun élément n'a été ajouté à cette checklist.</span>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="{{ path('app_checklist_item_template_index', {'template_id': checklist_template.id}) }}" 
+                           class="btn btn-outline btn-primary btn-sm">
+                            <i class="fa-solid fa-plus mr-2"></i> Ajouter des éléments
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
+    
+    <!-- Statistiques et utilisations -->
+    <div class="card bg-base-100 shadow-lg mb-8">
+        <div class="card-body">
+            <h2 class="card-title flex items-center">
+                <i class="fa-solid fa-chart-simple text-primary mr-2"></i>
+                Utilisation
+            </h2>
+            
+            <div class="stats shadow mt-4">
+                <div class="stat">
+                    <div class="stat-figure text-primary">
+                        <i class="fa-solid fa-file-lines text-3xl"></i>
+                    </div>
+                    <div class="stat-title">Projets</div>
+                    <div class="stat-value">{{ checklist_template.projetChecklists|length }}</div>
+                    <div class="stat-desc">Projets utilisant ce template</div>
+                </div>
+                
+                <div class="stat">
+                    <div class="stat-figure text-secondary">
+                        <i class="fa-solid fa-tasks text-3xl"></i>
+                    </div>
+                    <div class="stat-title">Éléments</div>
+                    <div class="stat-value">{{ checklist_template.checklistItemTemplates|length }}</div>
+                    <div class="stat-desc">Dans ce template</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex justify-between mt-8">
+        <a href="{{ path('app_checklist_template_index') }}" 
+           class="btn btn-outline">
+            <i class="fa-solid fa-arrow-left mr-2"></i> Retour à la liste
+        </a>
+    </div>
+</div>
 {% endblock %}

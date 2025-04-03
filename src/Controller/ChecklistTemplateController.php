@@ -45,8 +45,10 @@ final class ChecklistTemplateController extends AbstractController
     #[Route('/{id}', name: 'app_checklist_template_show', methods: ['GET'])]
     public function show(ChecklistTemplate $checklistTemplate): Response
     {
+        $checklistItemTemplate = $checklistTemplate->getChecklistItemTemplates();
         return $this->render('checklist_template/show.html.twig', [
             'checklist_template' => $checklistTemplate,
+            'checklist_item_templates' => $checklistItemTemplate,
         ]);
     }
 
