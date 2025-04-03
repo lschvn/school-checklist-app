@@ -1,0 +1,68 @@
+{# templates/partials/_alert.twig #}
+
+{# 
+    Ce fichier parcourt tous les messages flash disponibles dans la session 
+    et les affiche en utilisant les styles d'alerte DaisyUI.
+    Il adapte la couleur et l'icône en fonction du type de message flash (success, error, warning, info).
+#}
+
+{# Boucle sur chaque type de message flash (ex: 'success', 'error') #}
+{% for type, messages in app.flashes %}
+        {# Définir les classes CSS et l'icône en fonction du type #}
+        {% set alert_class = 'alert alert-vertical sm:alert-horizontal' %}
+        {% set icon_svg = '' %}
+        {% set title = '' %}
+        {% set icon_class = '' %}
+
+        {% if type == 'success' %}
+                {% set alert_class = 'alert alert-success alert-vertical sm:alert-horizontal' %}
+                {% set title = 'Succès !' %}
+                {% set icon_class = 'stroke-success' %}
+                {% set icon_svg %}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="{{ icon_class }} h-6 w-6 shrink-0">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                {% endset %}
+        {% elseif type == 'error' or type == 'danger' %}
+                {% set alert_class = 'alert alert-error alert-vertical sm:alert-horizontal' %}
+                {% set title = 'Erreur !' %}
+                {% set icon_class = 'stroke-error' %}
+                {% set icon_svg %}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="{{ icon_class }} h-6 w-6 shrink-0">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                {% endset %}
+        {% elseif type == 'warning' %}
+                {% set alert_class = 'alert alert-warning alert-vertical sm:alert-horizontal' %}
+                {% set title = 'Attention !' %}
+                {% set icon_class = 'stroke-warning' %}
+                {% set icon_svg %}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="{{ icon_class }} h-6 w-6 shrink-0">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                {% endset %}
+        {% else %} {# Default to 'info' type #}
+                {% set alert_class = 'alert alert-info alert-vertical sm:alert-horizontal' %}
+                {% set title = 'Information' %}
+                {% set icon_class = 'stroke-info' %}
+                {% set icon_svg %}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="{{ icon_class }} h-6 w-6 shrink-0">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                {% endset %}
+        {% endif %}
+
+        {# Boucle sur chaque message individuel pour ce type #}
+        {% for message in messages %}
+                {# Génère un ID unique pour l'attribut aria-labelledby si nécessaire, bien que pour un simple message, lier au titre suffit #}
+                {% set alert_id = 'flash-alert-' ~ type ~ '-' ~ loop.index %}
+
+                <div role="alert" class="{{ alert_class }} mb-4"> {# Ajout de mb-4 pour espacer les alertes si plusieurs apparaissent #}
+                        {{ icon_svg|raw }}
+                        <div>
+                                <h3 class="font-bold">{{ title }}</h3>
+                                <div class="text-xs">{{ message|raw }}</div>
+                        </div>
+                </div>
+        {% endfor %}
+{% endfor %}

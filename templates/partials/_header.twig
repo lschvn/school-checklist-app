@@ -1,0 +1,85 @@
+{# templates/partials/_header.html.twig #}
+<div class="navbar bg-gradient-to-r from-base-100 to-base-200 shadow-md mb-6 px-4 rounded-lg mx-2 mt-2"> 
+    <div class="navbar-start">
+        {# Logo amélioré avec dégradé #}
+        <a href="#" class="btn btn-ghost text-xl font-bold normal-case transition-all duration-200 hover:scale-105">
+            <span class="text-primary">Checklist</span><span class="text-accent">Pro</span>
+        </a>
+
+        {# Menu principal avec effets au survol #}
+        <div class="hidden md:flex">
+            <ul class="menu menu-horizontal px-1 ml-4 space-x-1">
+                <li>
+                    <a href="{{ path('app_checklist_template_index') }}" class="font-medium rounded-lg hover:bg-primary hover:text-primary-content transition-colors duration-200">
+                        <i class="fa-solid fa-list-check mr-2"></i>Modèles de Checklists
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="font-medium rounded-lg hover:bg-primary hover:text-primary-content transition-colors duration-200">
+                        <i class="fa-solid fa-clipboard-check mr-2"></i>Mes Checklists
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    {# Menu burger pour mobile #}
+    <div class="navbar-center md:hidden">
+        <div class="dropdown">
+            <label tabindex="0" class="btn btn-ghost btn-circle">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </label>
+            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                <li><a href="{{ path('app_checklist_template_index') }}">Modèles de Checklists</a></li>
+                <li><a href="#">Mes Checklists</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="navbar-end">
+        {% if app.user %}
+            {# Utilisateur connecté #}
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost btn-circle avatar online border border-primary hover:border-accent transition-all duration-200">
+                    <div class="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                        {# <img alt="Avatar utilisateur" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" /> #}
+                    </div>
+                </label>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-box w-60 border border-base-300">
+                    {% if app.user.username is defined %}
+                        <li class="menu-title font-semibold text-primary">
+                            <span>Bonjour, {{ app.user.username }}</span>
+                        </li>
+                        <div class="divider my-0"></div>
+                    {% endif %}
+                    <li>
+                        <a href="#" class="flex items-center transition-all duration-200 hover:bg-base-200">
+                            <i class="fa-solid fa-user mr-2"></i>Mon Compte
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center transition-all duration-200 hover:bg-base-200">
+                            <i class="fa-solid fa-gear mr-2"></i>Paramètres
+                        </a>
+                    </li>
+                    <div class="divider my-0"></div>
+                    <li>
+                        <a href="{{ path('app_logout') }}" class="flex items-center text-error hover:bg-error hover:text-error-content transition-all duration-200">
+                            <i class="fa-solid fa-right-from-bracket mr-2"></i>Se déconnecter
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% else %}
+            {# Utilisateur non connecté - Boutons améliorés #}
+            <a href="{{ path('app_login') }}" class="btn btn-ghost hover:bg-base-300 transition-all duration-200">
+                <i class="fa-solid fa-right-to-bracket mr-2"></i>Se connecter
+            </a>
+            <a href="{{ path('app_register') }}" class="btn btn-primary ml-2 hover:btn-accent transition-all duration-200 hover:scale-105">
+                <i class="fa-solid fa-user-plus mr-2"></i>S'inscrire
+            </a>
+        {% endif %}
+    </div>
+</div>

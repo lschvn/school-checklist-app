@@ -1,0 +1,39 @@
+{% extends 'layouts/with_header.html.twig' %}
+
+{% block title %}ChecklistTemplate index{% endblock %}
+
+{% block content %}
+    <h1>ChecklistTemplate index</h1>
+
+    <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for checklist_template in checklist_templates %}
+                <tr>
+                    <th>{{ checklist_template.id }}</th>
+                    <td>{{ checklist_template.title }}</td>
+                    <td>{{ checklist_template.description }}</td>
+                    <td>
+                        <a href="{{ path('app_checklist_template_show', {'id': checklist_template.id}) }}" class="btn btn-sm">show</a>
+                        <a href="{{ path('app_checklist_template_edit', {'id': checklist_template.id}) }}" class="btn btn-sm">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{{ path('app_checklist_template_new') }}" class="btn btn-primary">Create new</a>
+{% endblock %}

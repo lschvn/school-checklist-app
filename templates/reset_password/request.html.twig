@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réinitialiser votre mot de passe{% endblock %}
+
+{% block body %}
+<div class="grid min-h-screen grid-cols-1 lg:grid-cols-2">
+
+    {# Colonne Gauche - Image (visible seulement sur les écrans larges) #}
+    <div class="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+        {# Fond avec image - Utilise une image pertinente #}
+        <img
+            src="https://picsum.photos/1000/1200?grayscale"
+            alt="Background Login"
+            class="absolute inset-0 h-full w-full object-cover"
+        >   
+        <div class="absolute inset-0 bg-zinc-900 opacity-60"></div>
+        {# Superposition sombre optionnelle pour la lisibilité du texte si besoin #}
+
+        {# Contenu par dessus l'image (Optionnel) #}
+        <div class="relative z-20 flex items-center text-lg font-medium">
+             {# Logo ou Nom du site - Exemple #}
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="mr-2 h-6 w-6">
+                <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/>
+             </svg>
+             Checklist App Inc
+        </div>
+         {# Citation ou texte inspirant en bas (Optionnel) #}
+    </div>
+
+    {# Colonne Droite - Formulaire #}
+    <div class="flex items-center justify-center p-6 sm:p-12 lg:p-8 bg-base-100">
+        <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[380px]">
+
+            {# Titre et sous-titre #}
+            <div class="flex flex-col space-y-2 text-center">
+                <h1 class="text-2xl font-semibold tracking-tight">
+                    Réinitialiser votre mot de passe
+                </h1>
+                <p class="text-sm text-base-content/70">
+                    Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                </p>
+            </div>
+
+            {# Affichage des erreurs #}
+            {% for flash_error in app.flashes('reset_password_error') %}
+                <div class="alert alert-error shadow-sm" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>{{ flash_error }}</span>
+                </div>
+            {% endfor %}
+
+            {# Le Formulaire #}
+            {{ form_start(requestForm, {'attr': {'class': 'space-y-4'}}) }}
+                {# Champ Email #}
+                <div class="form-control w-full">
+                    <label class="label" for="requestForm_email">
+                        <span class="label-text">Email</span>
+                    </label>
+                    {{ form_widget(requestForm.email, {'attr': {'placeholder': 'nom@exemple.com', 'class': 'input input-bordered w-full'}}) }}
+                </div>
+
+                {# Bouton de soumission #}
+                <button class="btn btn-primary w-full mt-6" type="submit">
+                    Envoyer l'email de réinitialisation
+                </button>
+            {{ form_end(requestForm) }}
+            <div class="text-center mt-4">
+                <a href="{{ path('app_login') }}" class="link">Retour à la connexion</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

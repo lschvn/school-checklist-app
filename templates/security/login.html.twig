@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+{# Supprime les marges/paddings par défaut du body si nécessaire dans base.html.twig ou ici #}
+{# Exemple : <body class="bg-base-200"> dans base.html.twig #}
+
+<div class="grid min-h-screen grid-cols-1 lg:grid-cols-2">
+
+    {# Colonne Gauche - Image (visible seulement sur les écrans larges) #}
+    <div class="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+        {# Fond avec image - Utilise une image pertinente #}
+        <img
+            src="https://picsum.photos/1000/1200?grayscale"
+            alt="Background Login"
+            class="absolute inset-0 h-full w-full object-cover"
+        >   
+        <div class="absolute inset-0 bg-zinc-900 opacity-60"></div>
+        {# Superposition sombre optionnelle pour la lisibilité du texte si besoin #}
+
+        {# Contenu par dessus l'image (Optionnel) #}
+        <div class="relative z-20 flex items-center text-lg font-medium">
+             {# Logo ou Nom du site - Exemple #}
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="mr-2 h-6 w-6">
+                <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/>
+             </svg>
+             Checklist App Inc
+        </div>
+         {# Citation ou texte inspirant en bas (Optionnel) #}
+    </div>
+
+    {# Colonne Droite - Formulaire #}
+    <div class="flex items-center justify-center p-6 sm:p-12 lg:p-8 bg-base-100">
+        <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[380px]">
+
+            {# Titre et sous-titre #}
+            <div class="flex flex-col space-y-2 text-center">
+                <h1 class="text-2xl font-semibold tracking-tight">
+                    Connectez-vous
+                </h1>
+                <p class="text-sm text-base-content/70"> {# text-muted-foreground équivalent #}
+                    Entrez votre email et mot de passe pour accéder à votre compte
+                </p>
+            </div>
+
+            {# Affichage des erreurs #}
+            {% if error %}
+                <div role="alert" class="alert alert-error shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+                </div>
+            {% endif %}
+
+            {# Message si déjà connecté #}
+            {% if app.user %}
+                <div role="alert" class="alert alert-info shadow-sm">
+                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div>
+                        <h3 class="font-bold">Vous êtes connecté !</h3>
+                        <div class="text-xs">Connecté en tant que {{ app.user.userIdentifier }}.</div>
+                         <a href="{{ path('app_logout') }}" class="link link-primary text-sm">Se déconnecter</a>
+                    </div>
+                </div>
+            {% else %}
+                {# Le Formulaire #}
+                <form method="post" class="space-y-4">
+                    {# Champ Email #}
+                    <div class="form-control w-full">
+                        <label class="label" for="username">
+                            <span class="label-text">Email</span>
+                        </label>
+                        <input type="email" value="{{ last_username }}" name="_username" id="username" placeholder="nom@exemple.com" class="input input-bordered w-full" autocomplete="email" required autofocus>
+                    </div>
+
+                    {# Champ Mot de passe #}
+                     <div class="form-control w-full">
+                        <div class="flex items-center justify-between">
+                             <label class="label" for="password">
+                                <span class="label-text">Mot de passe</span>
+                            </label>
+                            {# Lien "Mot de passe oublié ?" Optionnel #}
+                            {# <a href="#" class="text-sm link link-hover link-primary">Mot de passe oublié ?</a> #}
+                        </div>
+                        <input type="password" name="_password" id="password" class="input input-bordered w-full" placeholder="********" autocomplete="current-password" required>
+                    </div>
+
+                    {# Champ CSRF Token (caché) #}
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    {# Option "Se souvenir de moi" (si activée dans security.yaml) #}
+                    {#
+                    <div class="form-control">
+                        <label class="label cursor-pointer justify-start gap-2">
+                            <input type="checkbox" name="_remember_me" id="_remember_me" class="checkbox checkbox-primary checkbox-sm" />
+                            <span class="label-text">Se souvenir de moi</span>
+                        </label>
+                    </div>
+                    #}
+
+                    {# Bouton de soumission #}
+                    <button class="btn btn-primary w-full mt-6" type="submit">
+                        Se connecter
+                    </button>
+                </form>
+
+                 {# Liens additionnels (Inscription, etc.) #}
+                <p class="px-8 text-center text-sm text-base-content/70">
+                     Pas encore de compte ?
+                    <a href="{{ path('app_register') }}" class="link link-primary hover:underline"> {# Adaptez 'app_register' à votre route #}
+                        Inscrivez-vous
+                    </a>
+                    <div class="text-center">
+                        <a href="{{ path('app_forgot_password_request') }}" class="link">J'ai oublié mon mot de passe</a>
+                    </div>
+                </p>
+            {% endif %} {# Fin du else pour if app.user #}
+
+             {# Conditions d'utilisation (Optionnel) #}
+            <p class="px-8 text-center text-xs text-base-content/50">
+                En cliquant sur continuer, vous acceptez nos <br />
+                <a href="#" class="underline underline-offset-4 hover:text-primary">
+                    Conditions d'utilisation
+                </a>
+                et notre
+                <a href="#" class="underline underline-offset-4 hover:text-primary">
+                    Politique de confidentialité
+                </a>.
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
